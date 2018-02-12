@@ -41,9 +41,12 @@ class FieldArray
 		double cellWidth;
 };
 
-FieldArray::FieldArray(int cells, double start, double end, double (*func)())
+FieldArray::FieldArray(int cells, double start, double end)
 {
 	field.resize(cells);
+	for (int i=0; i <cells;i++){
+		field[i]=0;
+	}
 }
 
 class Grid
