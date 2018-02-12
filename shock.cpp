@@ -32,10 +32,19 @@ double minmod (double preVal, double centVal, double nextVal, double cellWidth)
 class FieldArray
 {
 	public:
-
+		FieldArray(int cells, double start, double end);
 	private:
-
+		std::vector<double> field={};
+		int cellNum;
+		double startValue;
+		double endValue;
+		double cellWidth;
 };
+
+FieldArray::FieldArray(int cells, double start, double end, double (*func)())
+{
+	field.resize(cells);
+}
 
 class Grid
 {
