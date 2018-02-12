@@ -29,6 +29,13 @@ double minmod (double preVal, double centVal, double nextVal, double cellWidth)
 		return (double) 0;
 	}
 }
+class FieldArray
+{
+	public:
+
+	private:
+
+};
 
 class Grid
 {
