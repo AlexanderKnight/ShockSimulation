@@ -32,15 +32,16 @@ double minmod (double preVal, double centVal, double nextVal, double cellWidth)
 class FieldArray
 {
 	public:
-		FieldArray(int cells, double start, double end);
+		FieldArray(int cells);
 		getField();
-		getFieldValue();
+		getFieldValue(int i);
+		setFieldValue(int i, double x);
 	private:
 		std::vector<double> field={};
 		int cellNum;
 };
 
-FieldArray::FieldArray(int cells, double start, double end)
+FieldArray::FieldArray(int cells)
 {
 	field.resize(cells);
 	for (int i=0; i <cells;i++){
@@ -58,6 +59,12 @@ double FieldArray::getFieldValue(int i)
 	return field[i];
 }
 
+void FieldArray::setFieldValue(int i, double x)
+{
+	field[i]=x;
+}
+
+
 class Grid
 {
 	public:
@@ -65,27 +72,66 @@ class Grid
 
 
 	private:
-		std::vector<double> gridArray={};
-		std::vector<double> gridCoor = {};
+		//std::vector<double> gridArray={};
+		//std::vector<double> gridCoor = {};
 		int cellNum;
 		double startValue;
 		double endValue;
 		double cellWidth;
+		FieldArray *field;
+		FieldArray *coordinate;
+		FieldArray *slope;
+		FieldArray *leftCellEdgeField;
+		FieldArray *rightCellEdgeField;
 	
 };
 
 Grid::Grid(int cells, double start, double end)
 {
-	gridArray.resize(cells);
-	gridCoor.resize(cells);
+	//gridArray.resize(cells);
+	//gridCoor.resize(cells);
+	FieldArray field (cellNum);
+	FieldArray coordinate (cellNum);
+	FieldArray slope (cellNum);
+	FieldArray leftCellEdgeField(cellNum);
+	FieldArray rightCellEdgeField(cellNum);
 
 	startValue = start;
 	endValue = end;
 	cellWidth = (end-start)/((double) cells);
 
 	for (int i = 0; i <cells; i++){
-		gridCoor[i] = start + cellWidth/2 + i*cellWidth;
-		gridArray[i] = func(gridCoor[i]);
+		coordinate.setFieldValue(i, start + cellWidth/2 + i*cellWidth);
+		field.setFieldValue(i,func(gridCoor[i]));
+	}
+
+	updateSlopes()
+
+}
+
+void Grid::updateSlopes()
+{
+	
+	double preVal, centVal, postVal;
+	for (int i = 0; i < cells; i++){
+		if (i == 0){
+			preVal = field.getFieldValue(cells-1);
+			centVal = field.getFieldValue(i);
+			postVal = field.getFieldValue(i+1);
+			slope.setFieldValue(i, minmod(preVal,centVal,postVal,cellWidth);
+		}
+		else if (i == (cells-1)){
+			preVal = centVal;
+			centVal = postVal;
+			postVal = field.getFieldValue(0);
+			slope.setFieldValue(i, minmod(preVal, centVal, postVal, cellwidth);
+		}
+		else{
+			preVal = centVal;
+			centVal = postVal;
+			postVal = field.getFieldValue(i+1);
+			slope.setFieldValue(i, minmod(preVal, centVal, postVal, cellwidth);
+		}
 	}
 }
 
