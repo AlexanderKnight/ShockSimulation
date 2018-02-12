@@ -33,6 +33,8 @@ class FieldArray
 {
 	public:
 		FieldArray(int cells, double start, double end);
+		getField();
+		getFieldValue();
 	private:
 		std::vector<double> field={};
 		int cellNum;
@@ -44,6 +46,16 @@ FieldArray::FieldArray(int cells, double start, double end)
 	for (int i=0; i <cells;i++){
 		field[i]=0;
 	}
+}
+
+vector<double> FieldArray::getField()
+{
+	return field;
+}
+
+double FieldArray::getFieldValue(int i)
+{
+	return field[i];
 }
 
 class Grid
