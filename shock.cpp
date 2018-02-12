@@ -20,7 +20,7 @@ double minmod (double preVal, double centVal, double nextVal, double cellWidth)
 	{
 		return a;
 	}
-	else if (std::abs(a) > std::abs(b) && (a*b) > 0)
+	else if (std::abs(a) > std::abs(b) && (a*b) > (double) 0)
 	{
 		return b;
 	}
