@@ -11,6 +11,25 @@ double func (double x)
 	return val;
 }
 
+double minmod (double preVal, double centVal, double nextVal, double cellWidth)
+{
+	double a = (centVal-preVal)/cellWidth;
+	double b = (nextVal-centVal)/cellWidth;
+
+	if (std::abs(a) < std::abs(b) && (a*b)> (double) 0)
+	{
+		return a;
+	}
+	else if (std::abs(a) > std::abs(b) && (a*b) > 0)
+	{
+		return b;
+	}
+	else
+	{
+		return (double) 0;
+	}
+}
+
 class Grid
 {
 	public:
@@ -42,24 +61,6 @@ Grid::Grid(int cells, double start, double end)
 	}
 }
 
-double Grid::minmod(int cell)
-{
-	double a = (gridArray[cell]-gridArray[cell-1])/cellWidth;
-	double b = (gridArray[cell+1]-gridArray[cell])/cellWidth;
-
-	if (std::abs(a) < std::abs(b) && (a*b)> (double) 0)
-	{
-		return a;
-	}
-	else if (std::abs(a) > std::abs(b) && (a*b) > 0)
-	{
-		return b;
-	}
-	else
-	{
-		return (double) 0;
-	}
-}
 int main()
 {
 	Grid grid1(10, -1, 1);
