@@ -69,7 +69,8 @@ class Grid
 {
 	public:
 		Grid( int cells, double start, double end);
-
+		updateSlopes();
+		updateCellEdgeFields();
 
 	private:
 		//std::vector<double> gridArray={};
@@ -88,24 +89,28 @@ class Grid
 
 Grid::Grid(int cells, double start, double end)
 {
+	cellNum = cells;
+	startValue = start;
+	endValue = end;
+	cellWidth = (end-start)/((double) cells);
+	
 	//gridArray.resize(cells);
 	//gridCoor.resize(cells);
+	
 	FieldArray field (cellNum);
 	FieldArray coordinate (cellNum);
 	FieldArray slope (cellNum);
 	FieldArray leftCellEdgeField(cellNum);
 	FieldArray rightCellEdgeField(cellNum);
 
-	startValue = start;
-	endValue = end;
-	cellWidth = (end-start)/((double) cells);
 
 	for (int i = 0; i <cells; i++){
 		coordinate.setFieldValue(i, start + cellWidth/2 + i*cellWidth);
 		field.setFieldValue(i,func(gridCoor[i]));
 	}
 
-	updateSlopes()
+	updateSlopes();
+	updateCellEdgeFields();
 
 }
 
@@ -113,14 +118,14 @@ void Grid::updateSlopes()
 {
 	
 	double preVal, centVal, postVal;
-	for (int i = 0; i < cells; i++){
+	for (int i = 0; i < cellNum; i++){
 		if (i == 0){
-			preVal = field.getFieldValue(cells-1);
+			preVal = field.getFieldValue(cellNum-1);
 			centVal = field.getFieldValue(i);
 			postVal = field.getFieldValue(i+1);
 			slope.setFieldValue(i, minmod(preVal,centVal,postVal,cellWidth);
 		}
-		else if (i == (cells-1)){
+		else if (i == (cellNum-1)){
 			preVal = centVal;
 			centVal = postVal;
 			postVal = field.getFieldValue(0);
@@ -134,6 +139,15 @@ void Grid::updateSlopes()
 		}
 	}
 }
+
+void Grid::updateCellEdgeFields()
+{
+	for (int i =0; i<cellNum; i++){
+
+		leftCellEdgeField.setFieldValue(i,(field.getFieldValue(i)-slope.getFieldValue(i)*(cellWidth/2)));
+		rightCellEdgeField.setFieldValue(i,(field.getFieldValue(i) + slope.getFieldValue(i)*(cellwidth/2)));
+	}
+}	
 
 int main()
 {
