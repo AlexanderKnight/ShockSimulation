@@ -36,9 +36,6 @@ class FieldArray
 	private:
 		std::vector<double> field={};
 		int cellNum;
-		double startValue;
-		double endValue;
-		double cellWidth;
 };
 
 FieldArray::FieldArray(int cells, double start, double end)
