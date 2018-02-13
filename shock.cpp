@@ -6,13 +6,16 @@ using namespace std;
 #include <cmath>
 
 double func (double x)
+// Sets initial value for y(x)
 {
 	double val = exp (-1*(double)16*x*x);
 	return val;
 }
 
 double minmod (double preVal, double centVal, double nextVal, double cellWidth)
+//uses minmod numerical flux limiter to determine slope of cell from neighbor cells
 {
+
 	double a = (centVal-preVal)/cellWidth;
 	double b = (nextVal-centVal)/cellWidth;
 
@@ -30,6 +33,7 @@ double minmod (double preVal, double centVal, double nextVal, double cellWidth)
 	}
 }
 class FieldArray
+// Manages vectors for the Grid class below. Still needs to be refined.
 {
 	public:
 		FieldArray(int cells);
@@ -66,6 +70,11 @@ void FieldArray::setFieldValue(int i, double x)
 
 
 class Grid
+// Contains information needed to do a Berger's equation shock simulation
+// For each cell, coordinate value and field value are for center of cell.
+// Slope of cell passes through field value at center of cell.
+// Uses 2nd order Runge-Kutta, Courant-Friedrichs-Lewy condition, minmod,
+// and Local Lax Friedrich method to get simulation
 {
 	public:
 		Grid( int cells, double start, double end);
@@ -73,8 +82,6 @@ class Grid
 		void updateCellEdgeFields();
 
 	private:
-		//std::vector<double> gridArray={};
-		//std::vector<double> gridCoor = {};
 		int cellNum;
 		double startValue;
 		double endValue;
@@ -93,10 +100,7 @@ Grid::Grid(int cells, double start, double end)
 	startValue = start;
 	endValue = end;
 	cellWidth = (end-start)/((double) cells);
-	
-	//gridArray.resize(cells);
-	//gridCoor.resize(cells);
-	
+		
 	FieldArray field (cellNum);
 	FieldArray coordinate (cellNum);
 	FieldArray slope (cellNum);
@@ -116,10 +120,15 @@ Grid::Grid(int cells, double start, double end)
 }
 
 void Grid::updateSlopes()
+// Updates slopes from cell value and neighbors. Uses minmod to calculate. 
+// Grid is sinosoidal, so first and last cell are connected.
+
 {
 	
 	double preVal, centVal, postVal;
 	for (int i = 0; i < cellNum; i++){
+		// If cell is first or last, grabs the other as neighbor cell.
+		// If cell is in the middle, just updates neighbors and uses those values.
 		if (i == 0){
 			preVal = field->getFieldValue(cellNum-1);
 			centVal = field->getFieldValue(i);
@@ -142,6 +151,7 @@ void Grid::updateSlopes()
 }
 
 void Grid::updateCellEdgeFields()
+// Extrapolates cell field edge values from center value by slope
 {
 	for (int i =0; i<cellNum; i++){
 
