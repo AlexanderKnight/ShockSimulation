@@ -33,9 +33,9 @@ class FieldArray
 {
 	public:
 		FieldArray(int cells);
-		getField();
-		getFieldValue(int i);
-		setFieldValue(int i, double x);
+		vector<double> getField();
+		double getFieldValue(int i);
+		void setFieldValue(int i, double x);
 	private:
 		std::vector<double> field={};
 		int cellNum;
@@ -69,8 +69,8 @@ class Grid
 {
 	public:
 		Grid( int cells, double start, double end);
-		updateSlopes();
-		updateCellEdgeFields();
+		void updateSlopes();
+		void updateCellEdgeFields();
 
 	private:
 		//std::vector<double> gridArray={};
@@ -106,7 +106,8 @@ Grid::Grid(int cells, double start, double end)
 
 	for (int i = 0; i <cells; i++){
 		coordinate.setFieldValue(i, start + cellWidth/2 + i*cellWidth);
-		field.setFieldValue(i,func(gridCoor[i]));
+		field.setFieldValue(i,func(coordinate.getFieldValue(i)));
+		
 	}
 
 	updateSlopes();
@@ -120,22 +121,22 @@ void Grid::updateSlopes()
 	double preVal, centVal, postVal;
 	for (int i = 0; i < cellNum; i++){
 		if (i == 0){
-			preVal = field.getFieldValue(cellNum-1);
-			centVal = field.getFieldValue(i);
-			postVal = field.getFieldValue(i+1);
-			slope.setFieldValue(i, minmod(preVal,centVal,postVal,cellWidth);
+			preVal = field->getFieldValue(cellNum-1);
+			centVal = field->getFieldValue(i);
+			postVal = field->getFieldValue(i+1);
+			slope->setFieldValue(i, minmod(preVal,centVal,postVal,cellWidth));
 		}
 		else if (i == (cellNum-1)){
 			preVal = centVal;
 			centVal = postVal;
-			postVal = field.getFieldValue(0);
-			slope.setFieldValue(i, minmod(preVal, centVal, postVal, cellwidth);
+			postVal = field->getFieldValue(0);
+			slope->setFieldValue(i, minmod(preVal, centVal, postVal, cellWidth));
 		}
 		else{
 			preVal = centVal;
 			centVal = postVal;
-			postVal = field.getFieldValue(i+1);
-			slope.setFieldValue(i, minmod(preVal, centVal, postVal, cellwidth);
+			postVal = field->getFieldValue(i+1);
+			slope->setFieldValue(i, minmod(preVal, centVal, postVal, cellWidth));
 		}
 	}
 }
@@ -144,8 +145,8 @@ void Grid::updateCellEdgeFields()
 {
 	for (int i =0; i<cellNum; i++){
 
-		leftCellEdgeField.setFieldValue(i,(field.getFieldValue(i)-slope.getFieldValue(i)*(cellWidth/2)));
-		rightCellEdgeField.setFieldValue(i,(field.getFieldValue(i) + slope.getFieldValue(i)*(cellwidth/2)));
+		leftCellEdgeField->setFieldValue(i,(field->getFieldValue(i)-slope->getFieldValue(i)*(cellWidth/2)));
+		rightCellEdgeField->setFieldValue(i,(field->getFieldValue(i) + slope->getFieldValue(i)*(cellWidth/2)));
 	}
 }	
 
